@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>ABU BAKAR ONLY BOSS</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;900&display=swap" rel="stylesheet">
+<style>
+*{ box-sizing:border-box; user-select:none; -webkit-user-select:none; }
+html,body{
+  margin:0; padding:0; width:100%; height:100%; overflow:hidden;
+  background:#020005; font-family:'Orbitron',sans-serif; perspective:1200px;
+}
+#bg-site{ position:absolute; top:0; left:0; width:100%; height:100%; border:none; z-index:1; }
+#particles-canvas{ position:absolute; top:0; left:0; width:100%; height:100%; z-index:2; pointer-events:none; }
+#fab-icon{
+  position:fixed; top:15%; left:80%; width:58px; height:58px; z-index:9999;
+  border-radius:50%; border:2.5px solid #ff0033;
+  box-shadow:0 0 25px #ff0033, inset 0 0 10px #ff0033;
+  background:radial-gradient(circle, #ff0055, #330000);
+  cursor:pointer; display:none;
+  animation: pulseFab 1.5s infinite alternate;
+}
+@keyframes pulseFab{
+  from{ transform:scale(1); box-shadow:0 0 15px #ff0033; }
+  to{ transform:scale(1.08); box-shadow:0 0 35px #ff0055, 0 0 10px #fff; }
+}
+#rgb-parent{
+  position:fixed; width:260px; height:390px; z-index:10000;
+  display:flex; align-items:center; justify-content:center;
+  top:100px; left:40px; perspective:1000px;
+}
+.rings-container{ position:absolute; width:320px; height:320px; pointer-events:none; transform-style:preserve-3d; }
+.ring-3d{ position:absolute; width:100%; height:100%; border-radius:50%; top:0; left:0; }
+.ring1{ border:2.5px dashed #ff0044; box-shadow:0 0 30px #ff0033, inset 0 0 25px rgba(255,0,50,0.5); animation:spin3D 5s linear infinite; }
+.ring2{ border:3px dotted #ff2a00; box-shadow:0 0 40px #ff1100; animation:spin3DReverse 7s linear infinite; transform:scale(0.85); }
+.ring3{ border:2px double #ff0077; box-shadow:0 0 20px #ff0077; animation:spin4D 9s ease-in-out infinite alternate; transform:scale(1.12); }
+
+.orbit-ball{ position:absolute; width:22px; height:22px; border-radius:50%; background:#fff; top:50%; left:50%; margin:-11px; }
+.b1{ transform:rotate(0deg) translate(135px); box-shadow:0 0 25px 12px #ff0033, 0 0 45px #ff0000; }
+.b2{ transform:rotate(120deg) translate(135px); box-shadow:0 0 25px 12px #ff1a1a, 0 0 45px #ff3b00; }
+.b3{ transform:rotate(240deg) translate(135px); box-shadow:0 0 25px 12px #ff0066, 0 0 45px #ff003b; }
+
+@keyframes spin3D{ 0%{ transform: rotateZ(0deg) rotateX(25deg); } 100%{ transform: rotateZ(360deg) rotateX(25deg); } }
+@keyframes spin3DReverse{ 0%{ transform: rotateZ(360deg) rotateY(30deg); } 100%{ transform: rotateZ(0deg) rotateY(30deg); } }
+@keyframes spin4D{
+  0%{ transform: rotateZ(0deg) rotateX(40deg) rotateY(20deg) scale(1); filter:hue-rotate(0deg); }
+  50%{ transform: rotateZ(180deg) rotateX(15deg) rotateY(45deg) scale(1.08); filter:hue-rotate(20deg); }
+  100%{ transform: rotateZ(360deg) rotateX(40deg) rotateY(20deg) scale(1); filter:hue-rotate(0deg); }
+}
+
+#app-widget{
+  width:220px;
+  background:rgba(15, 2, 8, 0.92);
+  border-radius:28px;
+  border:2px solid #ff0044;
+  padding:15px 12px 14px;
+  box-shadow: 0 0 25px #ff0033, inset 0 0 20px #88001a;
+  position:relative; z-index:10001;
+  backdrop-filter: blur(8px);
+  animation:boxGlow 2.5s ease-in-out infinite alternate;
+}
+@keyframes boxGlow{
+  from{ box-shadow:0 0 18px #ff0033, inset 0 0 12px #88001a; transform: translateY(0px); }
+  to{ box-shadow:0 0 35px #ff0066, inset 0 0 25px #ff0033; transform: translateY(-3px); }
+}
+
+.app-title{
+  color:#ff1a40; font-size:9.5px; font-weight:900;
+  text-align:center; margin-bottom:8px; text-transform:uppercase;
+  letter-spacing:0.3px;
+  text-shadow:0 0 8px #ff0040, 0 0 15px #ff0000;
+  line-height: 1.3; word-break: break-word;
+}
+.period-badge{
+  background:linear-gradient(90deg, #ff0044, #ff5500); color:#fff;
+  padding:4px 14px; border-radius:20px; font-size:9px; font-weight:900;
+  margin:0 auto 10px; text-align:center; border:1px solid #fff;
+  width:fit-content; box-shadow:0 0 15px #ff0033;
+}
+.sayed-title{ color:#fff; font-size:10px; font-weight:900; text-align:center; margin-bottom:2px; text-shadow:0 0 5px #fff; }
+.prediction-res{ font-size:28px; font-weight:900; margin:4px 0 2px; text-align:center; line-height:1.2; }
+.trend-tag{ font-size:8px; color:#ff4466; text-align:center; margin-bottom:4px; font-weight:900; letter-spacing:.5px; }
+.lucky-num{ font-size:11px; color:#fff; text-align:center; margin-bottom:6px; font-weight:900; }
+.sec-tag{ font-size:8px; color:#ff4466; text-align:center; margin-bottom:10px; letter-spacing:1px; font-weight:900; text-shadow:0 0 6px #ff0033; }
+
+.login-input{
+  width:100%; padding:10px 5px;
+  background:#1f050d; border:2px solid #ff0044; border-radius:14px;
+  color:#fff; text-align:center; margin-bottom:10px; outline:none;
+  font-family:'Orbitron'; font-size:10px; font-weight:900; letter-spacing:1px;
+  box-shadow:0 0 12px rgba(255,0,68,.6); user-select:text;
+}
+.login-input::placeholder{ color:#884455; }
+
+.start-btn{
+  width:100%; padding:10px; border-radius:14px;
+  border:1px solid #ff4466; font-weight:900; color:#fff;
+  cursor:pointer;
+  background:linear-gradient(180deg, #ff0044 0%, #a80024 100%);
+  font-family:'Orbitron'; font-size:11px;
+  box-shadow:0 0 18px #ff0044;
+  text-shadow:0 0 5px #fff;
+}
+.footer-btns{ display:flex; justify-content:space-between; margin-top:10px; gap:8px; }
+.btn-exit, .btn-hide{ padding:8px 0; border-radius:14px; font-size:9px; font-weight:900; flex:1; cursor:pointer; }
+.btn-exit{ background:linear-gradient(180deg, #ff0000 0%, #880000 100%); color:#fff; border:1px solid #ff4444; box-shadow:0 0 10px #ff0000; }
+.btn-hide{ background:linear-gradient(180deg, #ff0066 0%, #aa003b 100%); color:#fff; border:1px solid #ff6699; box-shadow:0 0 10px #ff0055; }
+</style>
+</head>
+
+<body>
+
+<canvas id="particles-canvas"></canvas>
+
+<iframe
+  id="bg-site"
+  src="https://dkwin11.com/#/register?invitationCode=27876108513"
+  sandbox="allow-scripts allow-same-origin allow-forms allow-popups">
+</iframe>
+
+<div id="fab-icon"></div>
+
+<div id="rgb-parent">
+  <div class="rings-container">
+    <div class="ring-3d ring1">
+      <div class="orbit-ball b1"></div>
+      <div class="orbit-ball b2"></div>
+      <div class="orbit-ball b3"></div>
+    </div>
+    <div class="ring-3d ring2"></div>
+    <div class="ring-3d ring3"></div>
+  </div>
+
+  <div id="app-widget">
+
+    <div class="app-title">ABU BAKAR ONLY BOSS</div>
+
+    <div class="period-badge" id="displayPeriod">TIME: 30s</div>
+
+    <div id="loginScreen">
+      <div class="sec-tag">SECURITY CHECKING</div>
+      <input type="password" id="pw-in" class="login-input" placeholder="ENTER KEY" autocomplete="off">
+      <button class="start-btn" id="lBtn" onclick="startApp()">START HACK</button>
+      <div id="srv-msg" style="font-size:7.5px; color:#ff4466; text-align:center; margin-top:6px; font-weight:900;">
+        ENTER ACCESS KEY...
+      </div>
+    </div>
+
+    <div id="mainDashboard" style="display:none;">
+      <div class="sayed-title">PROCESSING SIGNAL</div>
+      <div id="predictionBox" class="prediction-res">WAIT</div>
+      <div id="luckyNumBox" class="lucky-num">NUM: --</div>
+      <div id="trendLabelBox" class="trend-tag">📊 MOMENTUM TREND</div>
+      <div style="font-size:8px; color:#ff2a55; text-align:center; margin-top:2px; font-weight:900; text-shadow:0 0 6px #ff0044;">
+        WINGO 30S 99% ACCURATE
+      </div>
+    </div>
+
+    <div class="footer-btns">
+      <button class="btn-exit" onclick="location.reload()">EXIT</button>
+      <button class="btn-hide" onclick="hideWidget()">HIDE</button>
+    </div>
+
+  </div>
+</div>
+
+<!-- Firebase SDKs -->
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+
+<script>
+
+/* ══════════════════════════════════════════
+   ⚙️  CONFIG & FIREBASE
+══════════════════════════════════════════ */
+var TELEGRAM_URL = "https://t.me/dkwin9dotcom";
+
+const firebaseConfig = {
+    apiKey: "AIzaSyCENJiTZ06YiWtca05d1wDVtm",
+    authDomain: "new-admin-panel-e5317.firebaseapp.com",
+    projectId: "new-admin-panel-e5317",
+    storageBucket: "new-admin-panel-e5317.firebasestorage.app",
+    messagingSenderId: "929640504813",
+    appId: "1:929640504813:web:07373859a3e2"
+};
+
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
+
+/* ═══════ PARTICLES ═══════ */
+const canvas = document.getElementById("particles-canvas");
+const ctx = canvas.getContext("2d");
+let w, h;
+function resizeCanvas(){ w = canvas.width = window.innerWidth; h = canvas.height = window.innerHeight; }
+resizeCanvas();
+window.addEventListener("resize", resizeCanvas);
+
+const particles = [];
+for(let i = 0; i < 55; i++){
+  particles.push({
+    x: Math.random() * w, y: Math.random() * h,
+    radius: Math.random() * 4 + 1.5,
+    speedY: Math.random() * 2.2 + 0.8,
+    speedX: (Math.random() - 0.5) * 0.8,
+    alpha: Math.random() * 0.7 + 0.3
+  });
+}
+
+function render4DParticles(){
+  ctx.clearRect(0, 0, w, h);
+  for(let i = 0; i < particles.length; i++){
+    let p = particles[i];
+    p.y += p.speedY;
+    p.x += p.speedX;
+    p.alpha += Math.sin(Date.now() * 0.003 + i) * 0.015;
+    if(p.y > h){ p.y = -15; p.x = Math.random() * w; }
+    if(p.x > w) p.x = 0;
+    if(p.x < 0) p.x = w;
+
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+    ctx.shadowBlur = 18;
+    ctx.shadowColor = "#ff0044";
+    ctx.fillStyle = `rgba(255, 30, 80, ${Math.max(0.2, Math.min(1, p.alpha))})`;
+    ctx.fill();
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, p.radius * 0.45, 0, Math.PI * 2);
+    ctx.fillStyle = "#ffffff";
+    ctx.fill();
+    ctx.restore();
+  }
+  requestAnimationFrame(render4DParticles);
+}
+render4DParticles();
+
+/* ═══════ LOGIN (FIREBASE VERIFICATION) ═══════ */
+function startApp(){
+  const key = document.getElementById("pw-in").value.trim();
+  const btn = document.getElementById("lBtn");
+  const msg = document.getElementById("srv-msg");
+
+  if(!key){ alert("Please enter key!"); return; }
+
+  btn.textContent = "CHECKING...";
+
+  db.ref("AccessKeys").once("value").then((snapshot) => {
+    const data = snapshot.val();
+    let isValid = false;
+
+    if (data) {
+      Object.values(data).forEach(savedKey => {
+        if (String(savedKey).trim() === key) {
+          isValid = true;
+        }
+      });
+    }
+
+    if (isValid) {
+      msg.textContent = "ACCESS GRANTED!";
+      msg.style.color = "#00ff77";
+
+      setTimeout(() => {
+        document.getElementById("loginScreen").style.display = "none";
+        document.getElementById("mainDashboard").style.display = "block";
+        generateAdvancedSignal();
+      }, 400);
+
+    } else {
+      btn.textContent = "START HACK";
+      msg.textContent = "ACCESS DENIED";
+      msg.style.color = "#ff1133";
+      alert("পাসওয়ার্ড ভুল/পাসওয়ার্ড পরিবর্তন করা হতে পারে অনুগ্রহ করে আপনার আপলাইনের সঙ্গে যোগাযোগ করে সঠিক পাসওয়ার্ড নিন!");
+      document.getElementById("pw-in").value = "";
+    }
+  }).catch((err) => {
+    btn.textContent = "START HACK";
+    msg.textContent = "CONNECTION ERROR";
+    alert("Connection Error!");
+  });
+}
+
+/* ═══════ PREDICTION ═══════ */
+const TREND_TYPES = ["Single Trend", "Double Trend", "Triple Trend", "Quadra Trend", "3 in 1 Trend", "2 in 1 Trend", "Long Trend"];
+const CHART_LOOKUP_BIG = [0, 3, 4, 8, 9, 12, 14, 15, 18, 19, 22, 23, 27, 28, 29, 32, 34, 53, 59, 63, 64, 66, 68, 73, 74, 76, 77, 78, 79, 80, 81, 82, 84, 85, 86, 89, 90, 94, 99];
+
+function generateAdvancedSignal(){
+  const now = new Date();
+  const timeSeed = now.getMinutes() + now.getHours() + now.getSeconds();
+
+  let number = Math.floor(Math.random() * 10);
+  let result = "BIG";
+
+  if(CHART_LOOKUP_BIG.includes(timeSeed % 100)){
+    result = "BIG";
+    number = [5, 6, 7, 8, 9][Math.floor(Math.random() * 5)];
+  } else {
+    result = number >= 5 ? "BIG" : "SMALL";
+  }
+
+  const selectedTrend = TREND_TYPES[timeSeed % TREND_TYPES.length];
+  const prediction = document.getElementById("predictionBox");
+  const lucky = document.getElementById("luckyNumBox");
+  const trend = document.getElementById("trendLabelBox");
+
+  prediction.textContent = result;
+  lucky.textContent = "NUM: " + number;
+
+  if(result === "BIG"){
+    prediction.style.color = "#ff0044";
+    prediction.style.textShadow = "0 0 15px #ff0044";
+    trend.style.color = "#ff4d6d";
+    trend.textContent = "📈 " + selectedTrend + " (BIG)";
+  }else{
+    prediction.style.color = "#00f5a0";
+    prediction.style.textShadow = "0 0 15px #00f5a0";
+    trend.style.color = "#00f5a0";
+    trend.textContent = "📉 " + selectedTrend + " (SMALL)";
+  }
+}
+
+/* ═══════ TIMER ═══════ */
+setInterval(function(){
+  const seconds = new Date().getSeconds();
+  const remaining = 30 - (seconds % 30);
+  document.getElementById("displayPeriod").textContent = "TIME: " + String(remaining).padStart(2,"0") + "s";
+
+  if(document.getElementById("mainDashboard").style.display !== "none"){
+    if(seconds % 30 === 0) generateAdvancedSignal();
+  }
+}, 1000);
+
+/* ═══════ HIDE / SHOW ═══════ */
+const parentWidget = document.getElementById("rgb-parent");
+const fabIcon = document.getElementById("fab-icon");
+
+function hideWidget(){
+  const rect = parentWidget.getBoundingClientRect();
+  fabIcon.style.left = (rect.left + rect.width / 2 - 29) + "px";
+  fabIcon.style.top = (rect.top + rect.height / 2 - 29) + "px";
+  parentWidget.style.display = "none";
+  fabIcon.style.display = "block";
+}
+function showWidget(){
+  const rect = fabIcon.getBoundingClientRect();
+  parentWidget.style.left = (rect.left - 90) + "px";
+  parentWidget.style.top = (rect.top - 90) + "px";
+  parentWidget.style.display = "flex";
+  fabIcon.style.display = "none";
+}
+fabIcon.addEventListener("click", showWidget);
+
+/* ═══════ DRAG ═══════ */
+let dragging = false, offsetX = 0, offsetY = 0;
+
+function startDrag(e){
+  if(e.target.tagName === "INPUT" || e.target.tagName === "BUTTON") return;
+  dragging = true;
+  const point = e.touches ? e.touches[0] : e;
+  const rect = parentWidget.getBoundingClientRect();
+  offsetX = point.clientX - rect.left;
+  offsetY = point.clientY - rect.top;
+}
+function dragWidget(e){
+  if(!dragging) return;
+  e.preventDefault();
+  const point = e.touches ? e.touches[0] : e;
+  parentWidget.style.left = (point.clientX - offsetX) + "px";
+  parentWidget.style.top = (point.clientY - offsetY) + "px";
+}
+function stopDrag(){ dragging = false; }
+
+parentWidget.addEventListener("mousedown", startDrag);
+parentWidget.addEventListener("touchstart", startDrag, {passive:false});
+window.addEventListener("mousemove", dragWidget);
+window.addEventListener("touchmove", dragWidget, {passive:false});
+window.addEventListener("mouseup", stopDrag);
+window.addEventListener("touchend", stopDrag);
+
+document.addEventListener("contextmenu", function(e){ e.preventDefault(); });
+
+</script>
+
+</body>
+</html>
